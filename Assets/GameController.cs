@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour
         
     }
 
+   
     // Update is called once per frame
     void Update()
     {
@@ -52,7 +53,7 @@ public class GameController : MonoBehaviour
 
 
         }   
-        else if (Input.GetMouseButtonUp(0) && !columns[closestIndex].IsFull())
+        else if (Input.GetMouseButtonUp(0) && closestIndex != -1 && !columns[closestIndex].IsFull())
         {
             Instantiate(isBlue ? blueBall : redBall, columns[closestIndex].initialPosition.position, Quaternion.identity).GetComponent<Ball>().Setup(columns[closestIndex]);
             closestIndex = -1;

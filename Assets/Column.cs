@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Column : MonoBehaviour
 {
-    public bool[] full;
+    public int index;
+    public Ball[] balls;
     public Transform[] positions;
     public GameObject arrow;
     public Transform initialPosition;
 
     public bool IsFull()
     {
-        for(int i=0; i<full.Length; i++)
+        for(int i=0; i<balls.Length; i++)
         {
-            if (!full[i]) return false;
+            if (balls[i] == null) return false;
         }
         return true;
     }
