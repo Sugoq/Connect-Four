@@ -50,11 +50,21 @@ public class Ball : MonoBehaviour
             for (int i = column.index -1; i >= 0; i--)
             {
                 if (GameController.instance.columns[i].balls[index] == null) break;
-
                 if (color == GameController.instance.columns[i].balls[index].color) sameColor++;
                 else break;
             }
-            if (sameColor >= 4) print("UUU AAAA");
+            if (sameColor >= 4) print("oi vc e gei");
+
+            sameColor = 0;
+            for (int i = index; i >=0; i--)
+            {
+                if (color == column.balls[i].color) sameColor++;
+                else break;
+            }
+            if (sameColor >= 4) print("oi vc e gei");
+            
+            
+
 
 
         }    
