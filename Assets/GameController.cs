@@ -47,8 +47,8 @@ public class GameController : MonoBehaviour
             {
                 columns[i].arrow.SetActive(i == closestIndex);
             }
-
-
+            columns[closestIndex].arrow.GetComponent<SpriteRenderer>().color = (isBlue ? Color.blue : Color.red);
+ 
 
 
 

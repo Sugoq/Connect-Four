@@ -61,13 +61,53 @@ public class Ball : MonoBehaviour
                 if (color == column.balls[i].color) sameColor++;
                 else break;
             }
-            if (sameColor >= 4) print("oi vc e gei");
-            
-            
+            if (sameColor >= 4) print("oi vc e gei vertical");
+
+            sameColor = 0;
+            for (int i = column.index, j = index;  i < GameController.instance.columns.Length; i++, j--)
+            {
+                if (j < 0) break;  
+                if (GameController.instance.columns[i].balls[j] == null) break;
+                if (color == GameController.instance.columns[i].balls[j].color)sameColor++;
+                else break;
+            }
+        
+            for (int i = column.index-1, j = index+1; i >= 0; i--, j++)
+            {
+                if (j >= GameController.instance.columns.Length) break;
+                if (GameController.instance.columns[i].balls[j] == null) break;
+                if (color == GameController.instance.columns[i].balls[j].color) sameColor++;
+                else break;
+            }
+            if (sameColor >= 4) print("oi diagonau direita");
+
+            sameColor = 0;
+            for (int i = column.index, j = index; i < GameController.instance.columns.Length; i++, j++)
+            {
+                if (j >= GameController.instance.columns.Length) break;
+                if (GameController.instance.columns[i].balls[j] == null) break;
+                if (color == GameController.instance.columns[i].balls[j].color) sameColor++;
+                else break;
+            }
+
+            for (int i = column.index - 1, j = index -1; i >= 0; i--, j--)
+            {
+                if (j<0) break;
+                if (GameController.instance.columns[i].balls[j] == null) break;
+                if (color == GameController.instance.columns[i].balls[j].color) sameColor++;
+                else break;
+            }
+            if (sameColor >= 4) print("oi diagonau esquerda");
 
 
 
-        }    
+
+
+
+
+
+
+        }
     }    
     
 }
