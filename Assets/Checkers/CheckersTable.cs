@@ -11,6 +11,7 @@ public class CheckersTable : MonoBehaviour
     
     void Start()
     {
+        
         for(int i =0; i < 3; i++)
         {
             for(int j= (i % 2 == 0 ? 0 : 1); j<8; j += 2)
@@ -40,3 +41,5 @@ public class CheckersTable : MonoBehaviour
         
     }
 }
+
+

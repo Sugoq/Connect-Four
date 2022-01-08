@@ -59,6 +59,7 @@
     <Compile Include="Assets\Ball.cs" />
     <Compile Include="Assets\Checkers\CheckersPiece.cs" />
     <Compile Include="Assets\Checkers\CheckersTable.cs" />
+    <Compile Include="Assets\Checkers\PieceMover.cs" />
     <Compile Include="Assets\Column.cs" />
     <Compile Include="Assets\Connect Four\scripts\CameraSize.cs" />
     <Compile Include="Assets\Connect Four\scripts\GameController.cs" />
