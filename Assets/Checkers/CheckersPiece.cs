@@ -12,13 +12,9 @@ public class CheckersPiece : MonoBehaviour
     bool isChosen;
     public bool activia;
     [SerializeField] Color initialColor;
-
-    [Header("Highlight references")]
-    public GameObject topLeft;
-    public GameObject topRight, downLeft, downRight;
-
-
-
+    
+    
+    
 
     void Start()
     {
@@ -54,30 +50,56 @@ public class CheckersPiece : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
     }
+    public void StopHighlight()
+    {
+        StopAllCoroutines();
+        spriteRenderer.color = initialColor;
+    }
     private void OnMouseDown()
     {
         
         if (isChosen)
         {
-            StopAllCoroutines();
-            topRight.SetActive(false); topLeft.SetActive(false); downRight.SetActive(false); downLeft.SetActive(false);
-            spriteRenderer.color = initialColor;
+            StopHighlight();
+            HighlightController.instance.ClearHighlight();
+            isChosen = !isChosen;
         }
-        else
+        else if ((CheckersTable.instance.isWhite && color == PieceColor.WHITE)||    
+                 (!CheckersTable.instance.isWhite && color == PieceColor.BLACK))
         {
-            topLeft.SetActive(true); topRight.SetActive(true); downLeft.SetActive(true); downRight.SetActive(true);
+             
+            
+            
+            
+            
+            List<Vector2Int> availablePositions = CheckersTable.instance.GetAvailablePositions(position, color);
+            HighlightController.instance.HighlightPositions(availablePositions,this);   
             StartCoroutine(PieceHighlight(0.5f));
+            
+            isChosen = !isChosen;
         }
-        isChosen = !isChosen;
+            
+           
        
         
         
     }
-    public void Move(Vector2 position)
+    public void Move(Vector2Int position)
     {
-        this.position += Vector2Int.RoundToInt((Vector3)position - transform.position);
-        transform.position = position;
+       
+        CheckersTable.instance.SetTable(this.position, null);
+        this.position = position;
+        transform.position = position + CheckersTable.instance.GetOrigin();
+        CheckersTable.instance.SetTable(this.position,this);
+        HighlightController.instance.ClearHighlight();
+        StopHighlight();
+            CheckersTable.instance.isWhite = !CheckersTable.instance.isWhite;
+
+
+
     }
+
+
 }
 public enum PieceColor{
     WHITE, BLACK

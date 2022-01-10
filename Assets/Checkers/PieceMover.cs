@@ -4,22 +4,24 @@ using UnityEngine;
 
 public class PieceMover : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    CheckersPiece piece;
+    Vector2Int position;
+    public void Setup(CheckersPiece piece, Vector2Int position)
     {
-
+        this.position = position;
+        this.piece = piece;
     }
 
-    // Update is called once per frame
+   
     void Update()
     {
 
     }
     private void OnMouseDown()
     {
-        transform.parent.GetComponent<CheckersPiece>().Move(transform.position);
-        print("oiiiiiiiiiiiiiiiiiiii");
+        piece.Move(position);
     }
+    
 }   
 
 
