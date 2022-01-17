@@ -93,10 +93,11 @@ public class CheckersPiece : MonoBehaviour
         for (Vector2Int v = this.position + dir; v != position; v += dir)
         {
             CheckersPiece piece = CheckersTable.instance.GetTable(v);
-            print($"Visitando casa {v} ");
+            //print($"Visitando casa {v} ");
             if(piece!= null && piece.color != color)
             {
                 CheckersTable.instance.DestroyPiece(piece);
+                
                 killed = true; break;
             }
         }
@@ -119,15 +120,26 @@ public class CheckersPiece : MonoBehaviour
         HighlightController.instance.ClearHighlight();
         if (killed)
         {
-            
-            if (!CheckersTable.instance.CheckAnyKillable(this))
+            if(isQueen)
+            {
+                if (!CheckersTable.instance.CheckQueenAnyKillable(position, color))
+                {
+                    print("satori");
+                    CheckersTable.instance.ChangeTurn();
+                    StopHighlight();
+                }
+                else
+                {
+                    HighlightController.instance.HighlightPositions(CheckersTable.instance.GetQueenAvailablePositions(position, color), this);
+                } 
+            }
+            else if (!CheckersTable.instance.CheckAnyKillable(this))
             {
                 CheckersTable.instance.ChangeTurn();
                 StopHighlight();
             }
             else
-            {
-                
+            {    
                 HighlightController.instance.HighlightPositions(CheckersTable.instance.GetAvailablePositions(position, color), this);
             }        
         }
@@ -136,18 +148,7 @@ public class CheckersPiece : MonoBehaviour
             CheckersTable.instance.ChangeTurn();
             StopHighlight();
         }   
-            
-       
-        
-
-
-        
-
-
-
     }
-
-
 }
 public enum PieceColor{
     WHITE, BLACK

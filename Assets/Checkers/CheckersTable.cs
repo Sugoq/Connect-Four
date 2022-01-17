@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CheckersTable : MonoBehaviour
 {
@@ -31,13 +32,15 @@ public class CheckersTable : MonoBehaviour
         if (exception != null) exception.StartHighlight();
         
     }
-    
+ 
     public void DestroyPiece(CheckersPiece piece)
     {
         SetTable(piece.position, null);
         if (piece.color == PieceColor.BLACK) blackPieces.Remove(piece);
         else whitePieces.Remove(piece);
         Destroy(piece.gameObject);
+        if (whitePieces.Count == 0) UIController.instance.EndGame(PieceColor.BLACK);
+        else if (blackPieces.Count == 0) UIController.instance.EndGame(PieceColor.WHITE);
             
     }
     public void DestroyPiece(Vector2Int position)
@@ -52,7 +55,12 @@ public class CheckersTable : MonoBehaviour
         List<CheckersPiece> canEat = new List<CheckersPiece>();
         foreach(CheckersPiece piece in list)
         {
-            if (CheckAnyKillable(piece.position, piece.color))
+            if(piece.isQueen && CheckQueenAnyKillable(piece.position, piece.color))
+            {
+                canEat.Add(piece);
+            }       
+            
+            else if(CheckAnyKillable(piece.position, piece.color))
             {
                 canEat.Add(piece);
             }
@@ -139,6 +147,17 @@ public class CheckersTable : MonoBehaviour
         QueenDiagonal(position, color, new Vector2Int(1, 1), ref move, ref kill, false);
         if (kill.Count > 0) return kill;
         return move;
+    }
+    public bool CheckQueenAnyKillable(Vector2Int position, PieceColor color)
+    {
+        List<Vector2Int> move = new List<Vector2Int>();
+        List<Vector2Int> kill = new List<Vector2Int>();
+        QueenDiagonal(position, color, new Vector2Int(-1, -1), ref move, ref kill, false);
+        QueenDiagonal(position, color, new Vector2Int(-1, 1), ref move, ref kill, false);
+        QueenDiagonal(position, color, new Vector2Int(1, -1), ref move, ref kill, false);
+        QueenDiagonal(position, color, new Vector2Int(1, 1), ref move, ref kill, false);
+        return kill.Count > 0;
+        
     }
     private void QueenDiagonal(Vector2Int pos, PieceColor color, Vector2Int dir, ref List<Vector2Int> move, ref List<Vector2Int> kill, bool foundEnemy)
     {
