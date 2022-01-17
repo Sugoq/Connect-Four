@@ -20,6 +20,7 @@ public class PieceMover : MonoBehaviour
     private void OnMouseDown()
     {
         piece.Move(position);
+
     }
     
 }   

@@ -10,8 +10,9 @@ public class CheckersPiece : MonoBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField] Color finalColor;
     bool isChosen;
-    public bool activia;
+    public bool selectable = true;
     [SerializeField] Color initialColor;
+    [SerializeField] GameObject crown;
     
     
     
@@ -19,12 +20,13 @@ public class CheckersPiece : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+          
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public IEnumerator PieceHighlight(float timer)
@@ -54,46 +56,92 @@ public class CheckersPiece : MonoBehaviour
     {
         StopAllCoroutines();
         spriteRenderer.color = initialColor;
+        isChosen = false;
     }
     private void OnMouseDown()
     {
-        
+        if (!selectable) return;
         if (isChosen)
         {
             StopHighlight();
             HighlightController.instance.ClearHighlight();
-            isChosen = !isChosen;
+            isChosen = false;
         }
-        else if ((CheckersTable.instance.isWhite && color == PieceColor.WHITE)||    
+        else if ((CheckersTable.instance.isWhite && color == PieceColor.WHITE)||        
                  (!CheckersTable.instance.isWhite && color == PieceColor.BLACK))
         {
-             
+
+            List<Vector2Int> availablePositions = isQueen ? CheckersTable.instance.GetQueenAvailablePositions(position,color): 
+                                                            CheckersTable.instance.GetAvailablePositions(position, color);
+            HighlightController.instance.HighlightPositions(availablePositions, this);
+            CheckersTable.instance.StopPieceHighlight(this);
             
-            
-            
-            
-            List<Vector2Int> availablePositions = CheckersTable.instance.GetAvailablePositions(position, color);
-            HighlightController.instance.HighlightPositions(availablePositions,this);   
-            StartCoroutine(PieceHighlight(0.5f));
-            
-            isChosen = !isChosen;
+            isChosen = true;
         }
-            
-           
-       
-        
-        
     }
+
+    public void StartHighlight()
+    {
+        StopAllCoroutines();
+        StartCoroutine(PieceHighlight(0.5f));
+    }
+
     public void Move(Vector2Int position)
     {
-       
+        bool killed = false;
+        Vector2Int dir = new Vector2Int(position.x>this.position.x?1:-1, position.y>this.position.y? 1:-1);
+        for (Vector2Int v = this.position + dir; v != position; v += dir)
+        {
+            CheckersPiece piece = CheckersTable.instance.GetTable(v);
+            print($"Visitando casa {v} ");
+            if(piece!= null && piece.color != color)
+            {
+                CheckersTable.instance.DestroyPiece(piece);
+                killed = true; break;
+            }
+        }
+        
         CheckersTable.instance.SetTable(this.position, null);
         this.position = position;
         transform.position = position + CheckersTable.instance.GetOrigin();
         CheckersTable.instance.SetTable(this.position,this);
+        if (position.y == 7 && color == PieceColor.WHITE)
+        {
+            isQueen = true;
+            crown.SetActive(true);
+
+        }
+        if (position.y == 0 && color == PieceColor.BLACK)
+        {
+            isQueen = true;
+            crown.SetActive(true);
+        }
         HighlightController.instance.ClearHighlight();
-        StopHighlight();
-            CheckersTable.instance.isWhite = !CheckersTable.instance.isWhite;
+        if (killed)
+        {
+            
+            if (!CheckersTable.instance.CheckAnyKillable(this))
+            {
+                CheckersTable.instance.ChangeTurn();
+                StopHighlight();
+            }
+            else
+            {
+                
+                HighlightController.instance.HighlightPositions(CheckersTable.instance.GetAvailablePositions(position, color), this);
+            }        
+        }
+        else
+        {
+            CheckersTable.instance.ChangeTurn();
+            StopHighlight();
+        }   
+            
+       
+        
+
+
+        
 
 
 

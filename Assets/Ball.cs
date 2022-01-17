@@ -6,12 +6,14 @@ public class Ball : MonoBehaviour
 {
     public BallColor color;
     public Column column;
+    
 
 
     public void Setup(Column column)
     {
         this.column = column;
         StartCoroutine(Fall());
+        
     }
 
     IEnumerator Fall() 
